@@ -220,3 +220,231 @@ print('abcdefg'[-5::2])
 ceg
 ```
 
+
+
+#### 시퀀스의 길이 (len())
+
+```python
+print(len([1, 2, 3]))		#리스트
+3
+print(len((1, 2, 3)))		#튜플
+3
+print(len(range(100)))		#레인지
+100
+print(len('apple'))			#문자열
+5
+```
+
+
+
+#### 최소/최대 (min()/max())
+
+- 문자열은 ascii 코드에 따름
+- ord() 함수로 확인
+- ascii 코드로 문자열 확인은 chr()
+
+```python
+print(min([1, 100, 59]))	#리스트
+1
+print(max((-10, 20, 5)))	#튜플
+20
+print(max(range(-100, 2)))	#레인지
+1
+print(max('abcd1234%^!'))	#문자열
+d
+```
+
+
+
+#### count
+
+- 시퀀스에서의 특정 값의 개수
+  - **값 없는 경우 0 반환**
+
+```python
+[1, 2, 1, 3, 4].count(1)	#리스트
+(1, 2, 3, 1, 1).count(1)	#튜플
+rnage(5).count(5)			#레인지
+'apple'.count('p')			#문자열
+
+2
+3
+0
+2
+```
+
+
+
+#### 실습문제
+
+```python
+print(([1,2]*2 + ['apple', 'banana'])[4].count('a') in range(2, 5))
+
+False
+```
+
+
+
+
+
+
+
+## 비시퀀스형 컨테이너
+
+### 세트(set)
+
+- 순서가 없는 자료구조
+  - 중괄호({}) 또는 set()를 통해 생성
+  - **빈 세트**를 만들기 위해서는 **set()** 사용해야 함
+  - 순서가 없기 때문에 값에 접근 불가
+- 수학에서 **집합**과 동일한 구조
+  - **집합 연산** 가능
+  - **중복된 값 존재X**
+
+```python
+print({1, 2, 3, 1, 2})			#중복 값 제거
+{1, 2, 3}
+print(type({}))					#{}는 딕셔너리
+<class 'dict'>
+print(type(set()))				# 빈 세트 만들기는 set()
+<class 'set'>
+```
+
+- 집합 연산
+
+```python
+set_a = {1, 2, 3}
+set_b = {3, 4, 5}
+print(set_a - set_b)			#차집합
+{1, 2}
+print(set_a | set_b)			#합집합
+{1, 2, 3, 4, 5}
+print(set_a & set_b)			#교집합
+{3}
+```
+
+* 세트(set) 활용
+
+  * 리스트에서 중복 값 제거(정렬은 안됨)
+  * 즉, 순서가 중요한 경우 사용하면 안됨
+
+  ```python
+  lst = [1, 2, 1, 2, 3]		#리스트
+  print(set(lst))				#set()으로 중복 값 제거(정렬은 안됨)
+  {1, 2, 3}
+  print(len(set(lst)))		#중복 값 제거 후 개수 구하기
+  3
+  ```
+
+  
+
+### 딕셔너리(dictionary)
+
+- key와 value가 쌍으로 이뤄진 자료구조
+  - 중괄호({}) 또는 dict()를 통해 생성
+  - key를 통해 value에 접근
+
+```python
+dic = {}
+dic2 = dict()
+print(type(dic))
+<class 'dict'>
+print(type(dic2))
+<class 'dict'>
+
+dic = {'a': 'apple', 'b':'banana', 'num': [1, 2, 3]}
+print(dic['num'])				
+[1, 2, 3]
+# key로 value 값에 접근 후
+# value가 리스트면 인덱스, 딕셔너리면 key로 접근 가능
+print(dic['num'][1])		
+2
+```
+
+- **key는 변경 불가능한 데이터(immutable)만 가능**
+  - string, integer, float, boolean, tuple, range
+  - 리스트(list)는 불가능
+- value는 모든 값으로 설정 가능(list, dictinoary 등)
+
+
+
+## 컨테이너 특징
+
+### 컨테이너 형변환
+
+- 컨테이너: string, list, tuple, range, set, dictionary
+
+- **모든 컨테이너는 range, dictionary로 형변환 불가**
+
+- **딕셔너리는 string으로 형변환 가능**
+
+  ```python
+  a = {1:'a', 2:'b'}
+  print(str(a))
+  {1:'a', 2:'b'}
+  print(type(str(a)))
+  <class 'str'>
+  ```
+
+  - **list, tuple, set으로는 key만 가능**
+
+  ```python
+  a = {1:'a', 2:'b'}
+  print(list(a))
+  [1, 2]
+  print(type(list(a)))
+  <class 'list'>
+  ```
+
+  
+
+### 컨테이너 분류
+
+#### 변경 불가능한 데이터(immutable)
+
+- 리터럴(literal)-숫자(Number), 문자열(String), 참/거짓(Bool)
+- range
+- tuple
+
+#### immutable의 복사
+
+```python
+a = 20
+b = a		# b에 20이 할당됨
+b = 10 		# b에 10이 (재)할당됨, a에는 영향없음
+```
+
+#### 변경 가능한 데이터(mutable)
+
+- list
+- set
+- dictionary
+
+#### mutable의 복사
+
+```python
+lst1 = [1, 2, 3]	#lst1은 [1, 2, 3] 리스트를 참조함
+lst2 = lst1			#lst2에 할당이 아닌 lst2가 [1, 2, 3] 리스트 참조
+lst2[0] = 10		#리스트가 [10, 2, 3]으로 바뀌고
+print(lst1)			#리스트를 참조하는 lst1과 lst2는 같은 결과를 보여줌
+[10, 2, 3]
+print(lst2)
+[10, 2, 3]
+```
+
+http://pythontutor.com/에서 확인해 볼것
+
+#### 정리
+
+컨테이너
+
+- 시퀀스(ordered)
+  - 'String'		(immutable)
+  - [list] 			   **(mutable)**
+  - (tuple) 		(immutable)
+  - range()		(immutable)
+
+- 비시퀀스(Unordered)
+  - {set}				**(mutable)**
+  - dictionary	   **(mutable)**
+
