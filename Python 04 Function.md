@@ -283,3 +283,147 @@ add(1, 2, 3)
   my_info(x, *args, **kwargs)
   ```
 
+
+
+### 함수 Scope
+
+- 함수는 코드 내부에 지역 스코프(local scope)를 생성하며, <br>그 외의 공간인 전역 스코프(global scope)로 구분
+
+#### 스코프(scope)
+
+- 전역 스코프(global scope): 코드 어디에서든 참조할 수 있는 공간
+- 지역 스코프(local scope): 함수가 만든 스코프. 함수 내부에서만 참조 가능
+
+#### 변수(variable)
+
+- 전역 변수(global variable): 전역 스코프에 정의된 변수
+- 지역 변수(local variable): 지역 스코프에 정의된 변수
+
+
+
+### 변수 수명주기
+
+- 변수는 각자의 수명주기(lifecycle)가 존재
+- 빌트인 스코프(built-in scope): 파이썬이 실행된 이후부터 영원히 유지
+- 전역 스코프(global scope): 모듈이 호출된 시점 이후 혹은 인터프리터가 끝날 때까지 유지
+- 지역(함수) 스코프(local scope): 함수가 호출될 때 생성되고, 함수가 종료될 때까지 유지
+
+```python
+def func():
+    a = 20
+    print('local', a)
+    
+func()
+local 20
+
+print('global', a)
+NameError: name 'a' is not defined
+```
+
+- a는 함수 내에서 할당(Local scope에서만 존재)
+- 함수가 종료되며 사라짐
+
+
+
+### 이름 검색 규칙(Name Resolution)
+
+- 파이썬에서 사용되는 이름(식별자)들은 이름공간(namespace)에 저장됨
+- LEGB Rule: 아래와 같은 순서로 이름을 찾아가나감
+  - **L**ocal scope: 함수
+  - **E**nclosed scope: 특정 함수의 상위 함수
+  - **G**lobal scope: 함수 밖의 변수, Import 모듈
+  - **B**uilt-in scope: 파이썬 안에 내장되어 있는 함수 또는 속성
+
+- 즉, 함수 내에서는 바깥 스포크의 변수에 접근 가능하나 수정은 할 수 없음
+
+#### LEGB 예시
+
+```python
+a = 0
+b = 1
+def enclosed():
+    a = 10
+    c = 3
+    def local(c):
+        print(a, b, c)
+    local(300)
+    print(a, b, c)
+enclosed()
+print(a, b)
+# 결과
+10 1 300	# E G L
+10 1 3		# L G L
+0 1			# G G
+```
+
+#### LEGB 예시 2
+
+```python
+print(sum)
+print(sum(range(2)))
+sum=5
+print(sum)
+print(sum(rnage(2)))
+#결과
+<built-in function sum>
+1
+5
+TypeError: 'int' object is not callable
+```
+
+- sum에 5를 할당하게 되면 Global scope에 저장
+
+- 이후 sum을 호출하면 LEGB 룰에 따라
+  - Global scope에 있는 5를 불러내고
+  - 5(range(2))가 되어 Error 발생
+
+
+
+### global
+
+- 현재 코드 블록 전체에 적용, 나열된 식별자(이름)들이 전역 변수임을 나타냄
+  - global에 나열된 이름은 같은 코드 블록에서 global 앞에 등장할 수 없음
+  - global에 나열된 이름은 매개변수, for 루프 대상, 클래스/함수 정의 등으로 정의되지 않아야 함
+
+#### global 예시
+
+- 사용 자제할 것
+
+```python
+a = 10
+def func1():
+    global a
+    a = 3
+    
+    
+print(1)
+func1()
+print(a)
+# 결과
+10
+3
+```
+
+- Error 예시
+
+```python
+# 1) global 전에 print 하는 경우
+a = 10
+def func1():
+    print(a)	#Error
+    global a
+    a = 3
+# 결과
+SyntaxError: name 'a' is used prior to global declaration
+```
+
+```python
+# 2) global 전에 인자로 사용하는 경우
+a = 10
+def func1(a):	#Error
+    global a
+    a = 3
+# 결과
+SyntaxError: name 'a' is parameter and global
+```
+
