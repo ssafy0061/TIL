@@ -283,25 +283,68 @@ add(1, 2, 3)
   my_info(x, *args, **kwargs)
   ```
 
+#### 언패킹
+
+```python
+def get_numbers(a, *args):		# 매개변수에 *: 패킹
+    return a, args
+print(get_numbers(1))
+print(get_numbers(1, 2, 3))
+# 결과
+(1, ())
+(1, (2, 3))
+
+# 언패킹
+x = [1, 2, 3]
+print(get_numbers(x))
+print(get_numbers(*x))			# 인자에 *: 언패킹
+print(get_numbers(*[1, 2, 3]))
+# 결과
+([1, 2, 3], ())
+(1, (2, 3))
+(1, (2, 3))
+```
+
+##### 예시
+
+```python
+a, *b, c = range(5)
+print(a)
+print(b)
+print(c)
+
+# 결과
+0
+[1, 2, 3]
+4
+
+for a, *b in [(1, 2, 3), (4, 5, 6, 7)]:
+    print(b)
+
+#결과
+[2, 3]
+[5, 6, 7]
+```
+
 
 
 ### 함수 Scope
 
 - 함수는 코드 내부에 지역 스코프(local scope)를 생성하며, <br>그 외의 공간인 전역 스코프(global scope)로 구분
 
-#### 스코프(scope)
+##### 스코프(scope)
 
 - 전역 스코프(global scope): 코드 어디에서든 참조할 수 있는 공간
 - 지역 스코프(local scope): 함수가 만든 스코프. 함수 내부에서만 참조 가능
 
-#### 변수(variable)
+##### 변수(variable)
 
 - 전역 변수(global variable): 전역 스코프에 정의된 변수
 - 지역 변수(local variable): 지역 스코프에 정의된 변수
 
 
 
-### 변수 수명주기
+#### 변수 수명주기
 
 - 변수는 각자의 수명주기(lifecycle)가 존재
 - 빌트인 스코프(built-in scope): 파이썬이 실행된 이후부터 영원히 유지
@@ -325,7 +368,7 @@ NameError: name 'a' is not defined
 
 
 
-### 이름 검색 규칙(Name Resolution)
+#### 이름 검색 규칙(Name Resolution)
 
 - 파이썬에서 사용되는 이름(식별자)들은 이름공간(namespace)에 저장됨
 - LEGB Rule: 아래와 같은 순서로 이름을 찾아가나감
@@ -336,7 +379,7 @@ NameError: name 'a' is not defined
 
 - 즉, 함수 내에서는 바깥 스포크의 변수에 접근 가능하나 수정은 할 수 없음
 
-#### LEGB 예시
+##### LEGB 예시
 
 ```python
 a = 0
@@ -356,7 +399,7 @@ print(a, b)
 0 1			# G G
 ```
 
-#### LEGB 예시 2
+##### LEGB 예시 2
 
 ```python
 print(sum)
@@ -379,7 +422,7 @@ TypeError: 'int' object is not callable
 
 
 
-### global
+#### global
 
 - 현재 코드 블록 전체에 적용, 나열된 식별자(이름)들이 전역 변수임을 나타냄
   - global에 나열된 이름은 같은 코드 블록에서 global 앞에 등장할 수 없음
@@ -404,7 +447,7 @@ print(a)
 3
 ```
 
-- Error 예시
+- ##### Error 예시
 
 ```python
 # 1) global 전에 print 하는 경우
@@ -427,3 +470,79 @@ def func1(a):	#Error
 SyntaxError: name 'a' is parameter and global
 ```
 
+
+
+#### nonlocal
+
+- 전역을 제외하고 가장 가까운 스코프의 변수를 연결하도록 함
+  - nonlocal에 나열된 이름은 같은 코드 블록에서 nonlocal 앞에 등장X
+  - nonlocal에 나열된 이름은 매개변수, for 루프 대상, 클래스/함수 정의 등으로 정의되지 않아야 함
+- global과는 달리 이미 존재하는 이름과의 연결만 가능
+
+##### nonlocal 예시
+
+```python
+x = 0
+def func1():
+    x = 1
+    def func2():
+        nonlocal x		#enclosed 스코프에 있는 x
+        x = 2			#즉, func1 함수에 있는 x
+    func2()
+    print(x)
+   
+func1()
+print(x)
+#결과
+2		# func1의 x 값 출력(fucn2에 의해 2로 바뀜)
+0		# func1 함수 종료와 동시에 함수 내 변수는 없어지고
+		# 함수 변수와 상관없이 Global 변수에서 x를 찾아 출력
+```
+
+#### global, nonlocal 비교
+
+##### **선언된 적 없는 변수의 활용**
+
+- global
+
+```python
+def func1():
+    global x
+    x = 3
+
+func1()
+print(x)
+# 결과
+3
+```
+
+- nonlocal
+
+```python
+def func1():
+    def func2():
+        nonlocal y
+        y = 2
+    func2()
+    print(y)
+func1()
+#결과
+SyntaxError: no binding for nonlocal 'y' found
+```
+
+- nonlocal은 이름 공간 상에 존재하는 변수만 사용가능
+- global은 선언 없어도 가능
+
+
+
+#### 주의사항
+
+- 기본적으로 함수에서 선언된 변수는 Local scope에 생성되며, 함수 종료시 사라짐
+- 해당 스코프에 **변수가 없는 경우** **LEGB rule에 의해 이름을 검색**함
+  - 변수에 **접근은 가능**하지만, 해당 변수를 **수정할 수는 없음**
+  - 값을 할당하는 경우 해당 스코프의 이름공간에 새롭게 생성되기 때문
+  - 단, 함수 내에서 필요한 상위 스코프 변수는 인자로 넘겨서 활용할 것<br>(클로저 제외)<br>(참고: 클로저란 어떤 함수 내부에 중첩된 형태로써 외부 스코프 변수에 접근 가능한 함수)
+
+- 상위 스코프에 있는 변수를 수정하고 싶다면 global, nonlocal 키워드 활용
+  - 단, 코드가 복잡해지면서 변수의 변경을 추적하기 어렵고, 예기치 못한 오류가 발생
+  - 가급적 사용하지 않는 것을 권장하며,<br>함수로 값을 바꾸고자 한다면 항상 인자로 넘기고 return 값을 사용하는 것을 추천
