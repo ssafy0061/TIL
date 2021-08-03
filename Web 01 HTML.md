@@ -160,9 +160,8 @@
     - hidden
     - lang
     - style
-    - style
     - tabindex
-    - titlle
+    - title
 
 #### 코드 작성 예시
 
