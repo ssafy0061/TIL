@@ -2,7 +2,7 @@
 
 Cascading Style Sheets
 
-- 스타일, 레이아웃 등을 통해 문서(HTML)를 표시하는 방법을 지정하는 언어
+- 스타일, 레이아웃 등을 통해 **문서(HTML)를 표시하는 방법을 지정하는 언어**
 
 ### 구문
 
@@ -28,6 +28,8 @@ h1 {
 - 각 쌍은 선택한 요소의 **속성**, 속성에 부여할 **값**을 의미
   - 속성(Property): 어떤 스타일 기능을 변경할지 결정
   - 값(Value): 어떻게 스타일 기능을 변경할지 결정
+
+
 
 ### 정의 방법 (3가지)
 
@@ -85,6 +87,8 @@ h1 {
 
 
 
+
+
 ## 선택자 Selector
 
 - HTML 문서에서 특정한 요소를 선택하여 스타일링 하기 위해서<br>반드시 선택자라는 개념이 필요
@@ -123,6 +127,8 @@ h1 {
   - 일반적으로 하나의 문서에 1번만 사용
   - 여러 번 사용해도 동작하지만, 단일 id를 사용하는 것을 권장
 
+
+
 ### 적용 우선순위(cascading order)
 
 아래와 같이 3개의 그룹을 지어볼 수 있다.
@@ -136,6 +142,7 @@ h1 {
   - 요소 선택자
 
 - 소스 순서
+
 
 #### 예시
 
@@ -212,6 +219,8 @@ h1 {
 
 
 
+
+
 ## CSS 단위
 
 ### 크기 단위
@@ -277,6 +286,8 @@ h1 {
   - `p { color: rgba(0, 0, 0, 0.5); }`
   - `p { color: hsla(120, 100%, 0, 0.5) }`
 
+
+
 ### 문서 표현
 
 - 텍스트
@@ -285,4 +296,208 @@ h1 {
 - 목록 꾸미기
 
 
+
+
+
+## Box model
+
+### 영역
+
+- 모든 HTML 요소는 box 형태로 되어있음(원처럼 보여도 요소는 box)
+- 하나의 박스는 4 부분(영역)으로 이루어짐
+  - **content**(내용)
+    - 글이나 이미지 등 요소의 실제 내용
+  - **padding**(내부여백)
+    - 요소에 적용된 **배경색, 이미지는 padding까지 적용**
+  - **border**(테두리)
+  - **margin**(바깥여백): 배경색 지정 못함
+
+```css
+/* 각자 지정 */
+.클래스이름 {
+  margin-top: 1px;
+  margin-right: 1px;
+  margin-bottom: 1px;
+  margin-left: 1px;    
+}
+
+/* 모두 지정 */
+margin: 10px
+padding: 30px
+
+/* border */
+border-width: 2px;
+border-style: dashed;  /* 점선 */
+border-style: solid;   /* 실선 */
+border-color: black;
+```
+
+- short hand
+
+```css
+/* margin/padding은 같음 */
+/* 상하좌우 */
+margin: 10px;
+/* 상하 / 좌우 */
+margin: 10px 20px;
+/* 상 / 좌우 / 하 */
+margin: 10px 20px 30px;
+/* 상 / 하 / 좌 / 우 */
+margin: 10px 20px 30px 40px;
+
+
+/* border */
+border: 2px dashed black;
+```
+
+
+
+### box-sizing
+
+- 모든 요소의 `box-sizing`의 기본값은 `content-box`
+
+  - padding을 제외한 순수 contents 영역만을 box로 지정
+    - box의 width, height는 contents 영역의 가로, 세로 길이 지정
+
+- 다만, 우리가 일반적으로 생각할 때는 border까지의 너비를 생각하기 때문에 다음과 같이 설정
+
+  - ```css
+    .classname {
+      box-sizing: border-box;
+    }
+    ```
+
+  - ```css
+    /* 시작할 때 이렇게 설정하기도 함 */
+    <style>
+      * {
+        box-sizing: border-box;  
+      }
+    ```
+
+
+
+### 마진 상쇄
+
+- block A의 top과 block B의 bottom에 적용된 각각의 margin이<br>둘 중에서 큰 마진 값으로 결합(겹쳐지게) 되는 현상
+  - 즉, top 10px, bottom 20px이면 간격이 30px이 아니라 20px
+
+
+
+## Display
+
+- 모든 요소는 네모(박스모델)이고
+- 어떻게 보여지는지(display)에 따라
+- 문서에서의 배치가 달라질 수 있다.
+- **즉, display는 HTML 요소들을 시각적으로 어떻게 보여줄지 결정하는 속성**
+
+
+
+### 인라인/ 블록 요소
+
+- **display: block**
+
+  - 줄 바꿈 일어남
+  - 화면 크기 전체의 가로 폭 차지
+  - block(블록) 레벨 요소 안에 인라인 레벨 요소가 들어갈 수 있음
+
+- **display: inline**
+
+  - 줄 바꿈X,  행의 일부 요소 (`<br>`로 줄바꿈)
+  - content 너비만큼 가로 폭 차지
+  - width, height, margin-top, margin-bottom 지정 불가
+  - 상하 여백은` line-height`로 지정
+
+- HTML4.1까지의 레벨 요소 구분
+
+  - block 레벨 요소
+    - div / ul, ol, li / p / hr / form 등
+  - inline 레벨 요소
+    - span / a / img / input , label / b, em, i , strong 등
+
+- **display: inlin-block**
+
+  - block과 inline 레벨 요소의 특징을 모두 갖는다.
+  - inline처럼 한 줄에 표시 가능
+  - block처럼 width, height, margin 속성을 모두 지정 가능
+
+- **display: none**
+
+  - 해당 요소를 **화면에 표시하지 않는다**. **(공간조차 사라짐)**
+  - 이와 비슷한 `visibility: hidden`은 해당 요소가 **공간은 차지**하나 **화면표시만 X**
+
+  - 공간이 사라지면 밑에 요소가 테트리스처럼 순차적으로 올라옴
+    - 그래서 hidden 사용
+
+
+
+### 속성에 따른 수평 정렬
+
+- 좌측 정렬
+  - margin-right: auto;                                  **(block)**
+  - text-align: left;                                          **(inline)**
+- 우측 정렬
+  - margin-left: auto;                                     **(block)**
+  - text-align: right;                                        **(inline)**
+- 중앙 정렬
+  - margin-right: auto; margin-left: auto;  **(block)**
+  - text-align: center;                                    **(inline)**
+
+
+
+
+
+## Position
+
+- 문서 상에서 요소를 **배치하는 방법**을 지정
+- `static` 모든 태그의 기본값(기준 위치)
+  - 일반적인 요소의 배치 순서에 따름(좌측 상단)
+  - 부모 요소 내에서 배치될 때는 부모 요소의 위치를 기준으로 배치 됨
+- 아래는 좌표 속성(property) top, bottom, left, right를 사용하여 이동 가능(음수 값도 가능)
+  - relative
+  - absolute
+  - fixed
+
+#### relative 상대 위치
+
+- 자기 자신의 static 위치를 기준으로 이동
+- 레이아웃에서 요소가 **차지하는 공간은 static일 때와 같음**
+
+#### absolute 절대 위치
+
+- 요소를 일반적인 문서 흐름에서 제거 후 레이아웃에 **공간을 차지하지 않음**
+- static이 아닌 가장 가까이에 있는 부모/조상 요소를 기준으로 이동<br>(없는 경우 body에 붙는 형태)
+- 원래 위치해 있었던 과거 위치에 있던 공간은 더 이상 존재X
+- 즉, 다른 모든 것과 별개로 독자적인 곳에 놓임
+- 페이지의 다른 요소의 위취와 간섭하지 않는 격리된 사용자 인터페이스 기능을 만드는데 활용
+  - 팝업 정보 상자, 제어 메뉴, 롤오버 패널, <br>페이지 어느 곳에서나 끌어서 놓기 할 수 있는 유저 인터 페이스 페이지 등
+
+#### fixed 고정위치
+
+- 요소를 일반적인 문서 흐름에서 제거 후 레이아웃에 **공간을 차지하지 않음**
+- 부모 요소와 관계없이 viewport를 기준으로 이동
+- 스크롤 시에도 항상 같은 곳에 위치함
+
+
+
+#### Sticky
+
+- relativ와 fixed의 특성을 가짐
+  - 단락 안에서는 fixed 처럼 고정위치
+  - 단락 넘어가면 relative처럼 마지막 위치로 고정
+  - relative 처럼 static 공간 그대로 차지
+
+[MDN position](https://developer.mozilla.org/en-US/docs/Web/CSS/position)
+
+
+
+## 참고 자료
+
+- [MDN web docs](https://developer.mozilla.org/ko/)
+
+- [Emmet](https://emmet.io)
+  - HTML & CSS를 작성할 때 보다 빠른 마크업을 위해서 사용되는 오픈소스
+  - 단축키, 약어 등을 사용
+  - 대부분의 텍스트 에디터에서 지원
+  - [Cheat Sheet](https://docs.emmet.io/cheat-sheet/) 매우 유용함
 
